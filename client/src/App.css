@@ -1,0 +1,19 @@
+@tailwind utilities;
+
+/* Pagination dots */
+.swiper-pagination-bullet {
+  background-color: #beb4b4;
+  /* Màu mặc định */
+  width: 10px;
+  height: 10px;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+/* Pagination active dot */
+.swiper-pagination-bullet-active {
+  background-color: #ff0000;
+  /* Màu đỏ khi active */
+  width: 12px;
+  height: 12px;
+}

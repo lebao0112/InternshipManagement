@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Hệ thống quản lý thực tập</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="assets/css/styles.css" />
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white shadow-lg rounded-lg p-6 w-96">
+      <h2 class="text-2xl font-bold text-center mb-4">Đăng nhập</h2>
+      <form id="loginForm">
+        <div class="mb-4">
+          <label for="username" class="block text-gray-700"
+            >Tên đăng nhập</label
+          >
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="password" class="block text-gray-700">Mật khẩu</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="w-full p-2 border rounded-lg focus:ring focus:ring-blue-300"
+          />
+        </div>
+
+        <div>
+          <span class="flex justify-between py-2">
+            <span><input type="checkbox" /> Lưu đăng nhập</span>
+            <a href="register.html">Đăng ký</a>
+          </span>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+        >
+          Đăng nhập
+        </button>
+      </form>
+
+      <p class="text-red-500 mt-3 text-center hidden" id="errorMessage"></p>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $("#loginForm").submit(function (event) {
+          event.preventDefault();
+
+          let username = $("#username").val();
+          let password = $("#password").val();
+
+          $.ajax({
+            url: "http://localhost:8000/login",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ username, password }),
+            success: function (response) {
+              alert("Đăng nhập thành công!");
+              localStorage.setItem("token", response.token);
+              if (response.role === "student") {
+                window.location.href =
+                  "../student/dashboard.html";
+              } else if (response.role === "lecturer") {
+                window.location.href =
+                  "../lecturer/dashboard.html";
+              } else {
+                alert("Vai trò không hợp lệ!");
+                localStorage.removeItem("token");
+              }
+            },
+            error: function (xhr) {
+              $("#errorMessage")
+                .text("Tên đăng nhập hoặc mật khẩu không đúng!")
+                .removeClass("hidden");
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

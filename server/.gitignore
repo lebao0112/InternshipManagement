@@ -1,0 +1,36 @@
+# Composer dependencies
+/vendor/
+composer.lock
+
+# Environment variables
+.env
+
+# Log files
+logs/
+*.log
+
+# Cache files
+cache/
+*.cache
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Debugging & PHPUnit
+phpunit.xml
+phpunit.xml.dist
+
+# Node dependencies (nếu dùng npm cho frontend)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Public uploaded files (nếu có file upload)
+public/uploads/
