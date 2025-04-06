@@ -6,7 +6,7 @@ use App\Controllers\AuthController;
 use App\Controllers\HelloController;
 use App\Controllers\InternshipCourseController;
 use App\Controllers\InternshipDetailController;
-
+use App\Controllers\AnnouncementController;
 use App\Middleware\AuthMiddleware;
 use App\Controllers\StudentController;
 use Psr\Http\Message\ResponseInterface;
@@ -30,9 +30,9 @@ $app->group('/student', function ($group) {
 
 // API Chỉ dành cho Lecturer
 $app->group('/lecturer', function ($group) {
-    // $group->get('/courses', [LecturerController::class, 'getCourses']);
-    // $group->post('/courses', [LecturerController::class, 'createCourse']);
-})->add(new AuthMiddleware(['lecturer']));  
+    $group->get('/internships/{internship_detail_id}', [InternshipDetailController::class, 'getById']);
+    $group->put('/internships/{internship_detail_id}/status', [InternshipDetailController::class, 'updateStatus']);
+})->add(new AuthMiddleware(['lecturer']));
 
 $courseController = new InternshipCourseController();
 $app->group('/courses', function ($group) use ($courseController) {
@@ -54,8 +54,27 @@ $app->group('/internships', function ($group) use ($internshipController) {
 })->add(new AuthMiddleware(['lecturer']));
 
 
-$app->post('/students/import', [StudentController::class, 'importStudents'])->add(new AuthMiddleware(['lecturer']));
+$studentController = new StudentController();
+$app->group('/student', function ($group) use ($studentController) {
+    $group->get('/internship-detail', [$studentController, 'getOwnInternship']);
+    $group->put('/internship-detail', [$studentController, 'updateOwnInternship']);
+    $group->post('/upload-cv', [$studentController, 'uploadCV']);
+})->add(new AuthMiddleware(['student']));
 
+$announcementController = new AnnouncementController();
+$app->group('/announcements', function ($group) use ($announcementController) {
+    $group->post('/create-announcement', [$announcementController, 'createAnnouncement']);
+    $group->delete('/delete-announcement/{id}', [$announcementController, 'deleteAnnouncement']);
+})->add(new AuthMiddleware(['lecturer']));
+
+$app->group('/announcements', function ($group) use ($announcementController) {
+    $group->get('/get-announcement/{course_id}', [$announcementController, 'getByCourse']);
+})->add(new AuthMiddleware(['student', 'lecturer']));
+
+
+$app->post('/students/import', [StudentController::class, 'importStudents'])->add(new AuthMiddleware(['lecturer']));
+$app->put('/change-password', [AuthController::class, 'changePassword'])
+    ->add(new AuthMiddleware(['student', 'lecturer']));
 
 $app->options('/{routes:.+}', function ($request, ResponseInterface $response) {
     return $response->withStatus(200)->withHeader('Content-Type', 'application/json');

@@ -47,4 +47,15 @@ class AuthController
         $response->getBody()->write(json_encode($result));
         return $response->withStatus($result['status'])->withHeader('Content-Type', 'application/json');
     }
+    public function changePassword(Request $request, Response $response)
+    {
+        $user = $request->getAttribute('user');
+        $data = $request->getParsedBody();
+
+        $userService = new AuthService();
+        $result = $userService->changePassword($user['sub'], $data['new_password']);
+
+        $response->getBody()->write(json_encode($result));
+        return $response->withStatus($result['status'])->withHeader('Content-Type', 'application/json');
+    }
 }

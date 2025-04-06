@@ -6,7 +6,7 @@ const ProtecedRoute = ({allowedRoles, children}) => {
     const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
 
     if(!token){
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
     }
 
     if(!allowedRoles.includes(user?.role)){

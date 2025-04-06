@@ -1,8 +1,8 @@
 
 export default function HomePage(){
     return(
-        <div>
-            
+        <div className="flex">
+            <div></div>
         </div>
     );
 }

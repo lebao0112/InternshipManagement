@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaSearch, FaFilter, FaPlus, FaFileImport, FaTimes, FaUpload, FaTrash } from "react-icons/fa";
+import { FaSearch, FaFilter, FaPlus, FaFileImport, FaTimes, FaUpload, FaTrash, FaEdit, FaEye, FaBell } from "react-icons/fa";
 
 export default function CourseDetailPage() {
     const { course_id } = useParams();
@@ -11,8 +11,9 @@ export default function CourseDetailPage() {
     const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
     const [dragActive, setDragActive] = useState(false);
+    
     const fileInputRef = useRef(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const token = localStorage.getItem("authToken");
         axios.get(`http://localhost:8000/courses/${course_id}`, {
@@ -22,13 +23,17 @@ export default function CourseDetailPage() {
             .catch((err) => console.error("Error fetching course details:", err));
     }, [course_id]);
 
-    useEffect(() => {
+    const fetchStudentCourse = (course_id) => {
         const token = localStorage.getItem("authToken");
         axios.get(`http://localhost:8000/internships/${course_id}/students`, {
             headers: { Authorization: `Bearer ${token}` }
         })
             .then((res) => setStudents(res.data))
-            .catch((err) => console.error("Error fetching students:", err));
+            .catch((err) => console.error("Error fetching internships:", err));
+    };
+
+    useEffect(() => {
+        fetchStudentCourse(course_id);
     }, [course_id]);
 
     const handleFileUpload = (event) => {
@@ -81,7 +86,8 @@ export default function CourseDetailPage() {
         })
             .then(() => {
                 setIsImportModalOpen(false);
-                showSuccessToast("Import sinh viên thành công");
+                fetchStudentCourse(course_id);
+              
             })
             .catch((err) => {
                 console.error("Error importing students:", err);
@@ -112,6 +118,12 @@ export default function CourseDetailPage() {
                 <button className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
                     <FaFilter /> Lọc
                 </button>
+                <button
+                    onClick={() => navigate(`/lecturer/courses/${course_id}/announcements`)}
+                    className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700"
+                >
+                    <FaBell /> Thông báo
+                </button>
                 <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
                     <FaPlus /> Thêm sinh viên
                 </button>
@@ -127,6 +139,7 @@ export default function CourseDetailPage() {
                         <th className="p-3 text-left">Tên sinh viên</th>
                         <th className="p-3 text-left">Email</th>
                         <th className="p-3 text-left">Trạng thái</th>
+                        <th className="p-3 text-center">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -135,8 +148,12 @@ export default function CourseDetailPage() {
                             <td className="p-3">{student.student_code}</td>
                             <td className="p-3">{student.first_name + " " + student.last_name}</td>
                             <td className="p-3">{student.email}</td>
-                            <td className={`p-3 ${student.status === 'pending' ? 'text-yellow-500' : student.status === 'approved' ? 'text-green-500' : 'text-red-300'}`}><strong>{student.status}</strong></td>
-                               
+                            <td className={`p-3 ${student.status === 'pending' ? 'text-yellow-600' : student.status === 'approved' ? 'text-green-600' : 'text-red-600'}`}><strong>{student.status}</strong></td>
+                            <td className="p-3 flex justify-center gap-3">
+                                <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => navigate(`/lecturer/internships/${student.internship_detail_id}`)}>
+                                    <FaEye />
+                                </button>    
+                            </td>               
 
                         </tr>
                     ))}

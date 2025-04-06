@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { FaUser, FaSignOutAlt, FaBriefcase } from "react-icons/fa";
+import { SiReaddotcv } from "react-icons/si"; 
 import { useNavigate } from "react-router-dom";
 
-export default function Sidebar() {
+export default function Sidebar2() {
     const navigate = useNavigate();
 
 
@@ -14,17 +15,22 @@ export default function Sidebar() {
 
     return (
         <aside className="w-64 h-screen bg-[#0063CD] text-white p-5 fixed">
-            <h2 className="text-xl font-bold mb-5 mt-6">Admin Panel</h2>
+            <h2 className="text-xl font-bold mb-5 mt-6">Thông tin thực tập</h2>
             <nav>
                 <ul>
                     <li className="mb-4">
-                        <Link to="courses" className="flex items-center gap-2  p-2 rounded hover:bg-blue-400">
-                            <FaBriefcase /> Quản lý thực tập
+                        <Link to="internship-detail" className="flex items-center gap-2  p-2 rounded hover:bg-blue-400">
+                            <FaBriefcase /> Thực tập
                         </Link>
                     </li>
                     <li className="mb-4">
                         <Link to="" className="flex items-center gap-2  p-2 rounded hover:bg-blue-400">
                             <FaUser /> Tài khoản (Profile)
+                        </Link>
+                    </li>
+                    <li className="mb-4">
+                        <Link to="create-cv" className="flex items-center gap-2  p-2 rounded hover:bg-blue-400">
+                            <SiReaddotcv /> Tạo CV với AI
                         </Link>
                     </li>
                     <li>

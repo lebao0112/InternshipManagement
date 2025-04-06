@@ -13,15 +13,50 @@ class InternshipDetailService
 
     public function getInternshipById($id)
     {
-        return Capsule::table('internship_details')->where('id', $id)->first();
+        return Capsule::table('internship_details')->where('internship_detail_id', $id)->first();
     }
     public function getStudentsByCourseId($courseId)
     {
         return Capsule::table('internship_details as a')
             ->join('students as b', 'a.student_id', '=', 'b.student_id')
             ->where('a.course_id', $courseId)
-            ->select('b.student_id','b.student_code' ,'b.last_name', 'b.first_name', 'b.email', 'a.status')
+            ->select('a.internship_detail_id','b.student_id','b.student_code' ,'b.last_name', 'b.first_name', 'b.email', 'a.status')
             ->get();
+    }
+
+    public function getInternshipByStudentId($studentId)
+    {
+        return Capsule::table('internship_details')
+            ->join('students', 'students.student_id', '=', 'internship_details.student_id')
+            ->where('internship_details.student_id', $studentId)
+            ->select([
+                'internship_details.*',
+                'students.first_name',
+                'students.last_name',
+                'students.student_code',
+                Capsule::raw("CONCAT(students.first_name, ' ', students.last_name) AS student_name")
+            ])
+            ->first();
+    }
+
+    public function updateStatus($internshipDetailId, $status)
+    {
+        if (!in_array($status, ['approved', 'rejected', 'pending'])) {
+            return ['error' => 'Invalid status', 'status' => 400];
+        }
+
+        $updated = Capsule::table('internship_details')
+            ->where('internship_detail_id', $internshipDetailId)
+            ->update([
+                'status' => $status,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        if ($updated === 0) {
+            return ['error' => 'No changes or student not found', 'status' => 400];
+        }
+
+        return ['message' => 'Status updated', 'status' => 200];
     }
 
     public function createInternship($data, $user)

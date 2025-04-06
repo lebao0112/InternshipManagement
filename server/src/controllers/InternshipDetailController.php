@@ -24,7 +24,7 @@ class InternshipDetailController
 
     public function getById(Request $request, Response $response, $args)
     {
-        $internship = $this->internshipService->getInternshipById($args['id']);
+        $internship = $this->internshipService->getInternshipById($args['internship_detail_id']);
 
         if (!$internship) {
             return $response->withStatus(404)->withHeader('Content-Type', 'application/json')
@@ -35,6 +35,31 @@ class InternshipDetailController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    public function getByStudentId(Request $request, Response $response, $args)
+    {
+        $studentId = $args['student_id'];
+        $internship = $this->internshipService->getInternshipByStudentId($studentId);
+
+        if (!$internship) {
+            return $response->withStatus(404)->withHeader('Content-Type', 'application/json')
+                ->getBody()->write(json_encode(["error" => "Internship not found"]));
+        }
+
+        $response->getBody()->write(json_encode($internship));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    public function updateStatus(Request $request, Response $response, array $args)
+    {
+        $internshipDetailId = $args['internship_detail_id'];
+        $data = $request->getParsedBody();
+        $status = $data['status'] ?? "pending";
+
+        $result = $this->internshipService->updateStatus($internshipDetailId, $status);
+
+        $response->getBody()->write(json_encode($result));
+        return $response->withStatus($result['status'])->withHeader('Content-Type', 'application/json');
+    }
     public function getStudentsByCourseId(Request $request, Response $response, $args)
     {
         $courseId = $args['course_id']; // Lấy course_id từ URL

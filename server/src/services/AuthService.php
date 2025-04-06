@@ -55,7 +55,7 @@ class AuthService
         // Generate JWT token
         $token = JwtHelper::generateToken($user->user_id, $user->role);
 
-        return ["message" => "Login successful", "token" => $token,"role" => $role, "status" => 200];
+        return ["message" => "Login successful", "token" => $token,"role" => $role, "is_first_login" => $user->is_first_login == 1, "status" => 200];
     }
 
     public function getUserDetails($user)
@@ -74,5 +74,24 @@ class AuthService
             "created_at" => $userDetails->created_at,
             "status" => 200
         ];
+    }
+
+    public function changePassword($userId, $newPassword)
+    {
+        $user = Capsule::table('users')->where('user_id', $userId)->first();
+
+        if (!$user) {
+            return ['error' => 'User not found', 'status' => 404];
+        }
+
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+        Capsule::table('users')->where('user_id', $userId)->update([
+            'password' => $hashedPassword,
+            'is_first_login' => 0,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return ['message' => 'Password changed successfully', 'status' => 200];
     }
 }

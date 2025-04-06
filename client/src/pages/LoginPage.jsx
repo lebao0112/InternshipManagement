@@ -30,14 +30,21 @@ export default function LoginPage() {
         try {
             const response = await axios.post("http://localhost:8000/login", user);
             if (response.status === 200 && response.data.token) {
-                localStorage.setItem("authToken", response.data.token);
-                // setToast({ message: "Đăng nhập thành công!", type: "success" });
-                showSuccessToast("Đăng nhập thành công");
-                // await fetchUser(); // Gọi API để cập nhật user ngay lập tức
-                if (response.data.role === "student")
-                    navigate("/student");
-                if (response.data.role === "lecturer")
-                    navigate("/lecturer/courses");
+
+                if (response.data.is_first_login) {
+                    sessionStorage.setItem("tempToken", response.data.token);
+                    navigate("/reset-password");
+                }else{
+                    localStorage.setItem("authToken", response.data.token);
+                    // setToast({ message: "Đăng nhập thành công!", type: "success" });
+                    showSuccessToast("Đăng nhập thành công");
+                    // await fetchUser(); // Gọi API để cập nhật user ngay lập tức
+                    if (response.data.role === "student")
+                        navigate("/student/internship-detail");
+                    if (response.data.role === "lecturer")
+                        navigate("/lecturer/courses");
+                }
+               
             } else {
                 showErrorToast("Đăng nhập thất bại");
             }
@@ -49,7 +56,7 @@ export default function LoginPage() {
 
     return (
 
-        <div className="container">
+        <div className="flex-grow container max-w-4/6 mx-auto px-4 py-6">
             <div className="flex justify-center">
                 <div className="w-96">
                     <h1 className="text-2xl font-semibold text-center">Đăng nhập</h1>
