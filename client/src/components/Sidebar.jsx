@@ -22,11 +22,11 @@ export default function Sidebar() {
                             <FaBriefcase /> Quản lý thực tập
                         </Link>
                     </li>
-                    <li className="mb-4">
+                    {/* <li className="mb-4">
                         <Link to="" className="flex items-center gap-2  p-2 rounded hover:bg-blue-400">
                             <FaUser /> Tài khoản (Profile)
                         </Link>
-                    </li>
+                    </li> */}
                     <li>
                         <button className="flex items-center gap-2 w-full text-left p-2 rounded hover:bg-blue-400" onClick={handleLogout}>
                             <FaSignOutAlt /> Đăng xuất

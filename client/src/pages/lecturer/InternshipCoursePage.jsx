@@ -130,6 +130,7 @@ export default function InternshipCoursePage() {
                             <FaTimes />
                         </button>
                         <h2 className="text-xl font-bold mb-4">Thêm khóa học mới</h2>
+                        <lable>Tên khoá học</lable>
                         <input
                             type="text"
                             placeholder="Tên khóa học"
@@ -137,6 +138,7 @@ export default function InternshipCoursePage() {
                             value={newCourse.course_name}
                             onChange={(e) => setNewCourse({ ...newCourse, course_name: e.target.value })}
                         />
+                        <lable>Mô tả</lable>
                         <textarea
                             placeholder="Mô tả"
                             className="w-full border p-2 mb-4 rounded"

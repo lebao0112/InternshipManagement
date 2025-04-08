@@ -107,27 +107,29 @@ export default function AnnouncementManagementPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 mt-5">
             <h1 className="text-2xl font-bold mb-6">Quản lý Thông Báo</h1>
             
           
 
             <form onSubmit={handleAddAnnouncement} className="mb-8">
                 <div className="mb-4">
+                    <label >Tiêu đề thông báo</label>
                     <input
                         type="text"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Tiêu đề thông báo"
+                        placeholder="Nhập tiêu đề thông báo"
                         className="w-full p-2 border rounded"
                         required
                     />
                 </div>
                 <div className="mb-4">
+                    <label>Nội dung thông báo</label>
                     <textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Nội dung thông báo"
+                        placeholder="Nhập nội dung thông báo"
                         className="w-full p-2 border rounded"
                         rows="4"
                         required

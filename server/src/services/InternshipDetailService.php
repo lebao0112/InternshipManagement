@@ -13,7 +13,7 @@ class InternshipDetailService
 
     public function getInternshipById($id)
     {
-        return Capsule::table('internship_details')->where('internship_detail_id', $id)->first();
+        return Capsule::table('internship_details')->where('internship_detail_id', $id)->join('students','students.student_id','=','internship_details.student_id')->first();
     }
     public function getStudentsByCourseId($courseId)
     {
@@ -23,7 +23,14 @@ class InternshipDetailService
             ->select('a.internship_detail_id','b.student_id','b.student_code' ,'b.last_name', 'b.first_name', 'b.email', 'a.status')
             ->get();
     }
-
+//  $userDetails = Capsule::table('users')
+//             ->where('users.user_id', $user['sub'])
+//             ->when($user['role'] === 'student', function ($query) {
+//                 return $query->join('students', 'students.user_id', '=', 'users.user_id');
+//             }, function ($query) {
+//                 return $query->join('lecturers', 'lecturers.user_id', '=', 'users.user_id');
+//             })
+//             ->first();
     public function getInternshipByStudentId($studentId)
     {
         return Capsule::table('internship_details')
@@ -57,6 +64,22 @@ class InternshipDetailService
         }
 
         return ['message' => 'Status updated', 'status' => 200];
+    }
+
+    public function updateFeedback($internshipDetailId, $feedback)
+    {
+        $updated = Capsule::table('internship_details')
+            ->where('internship_detail_id', $internshipDetailId)
+            ->update([
+                'feedback' => $feedback,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ]);
+
+        if ($updated === 0) {
+            return ['error' => 'No changes or student not found', 'status' => 400];
+        }
+
+        return ['message' => 'Feedback updated', 'status' => 200];
     }
 
     public function createInternship($data, $user)

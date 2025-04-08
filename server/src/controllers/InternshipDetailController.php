@@ -60,6 +60,18 @@ class InternshipDetailController
         $response->getBody()->write(json_encode($result));
         return $response->withStatus($result['status'])->withHeader('Content-Type', 'application/json');
     }
+
+    public function updateFeedback(Request $request, Response $response, array $args)
+    {
+        $internshipDetailId = $args['internship_detail_id'];
+        $data = $request->getParsedBody();
+        $feedback = $data['feedback'];
+
+        $result = $this->internshipService->updateFeedback($internshipDetailId, $feedback);
+
+        $response->getBody()->write(json_encode($result));
+        return $response->withStatus($result['status'])->withHeader('Content-Type', 'application/json');
+    }
     public function getStudentsByCourseId(Request $request, Response $response, $args)
     {
         $courseId = $args['course_id']; // Lấy course_id từ URL

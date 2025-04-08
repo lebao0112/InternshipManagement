@@ -232,7 +232,7 @@ const InternshipDetail = () => {
           <div className="mt-2">
             <label className="block font-medium mb-1">Nhận xét của giảng viên</label>
             <p class="text-gray-500 mb-6 text-start max-w-full overflow-wrap">
-             sss
+             {form.feedback}
             </p>
 
           </div>

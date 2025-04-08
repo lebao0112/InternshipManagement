@@ -32,6 +32,7 @@ $app->group('/student', function ($group) {
 $app->group('/lecturer', function ($group) {
     $group->get('/internships/{internship_detail_id}', [InternshipDetailController::class, 'getById']);
     $group->put('/internships/{internship_detail_id}/status', [InternshipDetailController::class, 'updateStatus']);
+    $group->put('/internships/{internship_detail_id}/feedback', [InternshipDetailController::class, 'updateFeedback']);
 })->add(new AuthMiddleware(['lecturer']));
 
 $courseController = new InternshipCourseController();

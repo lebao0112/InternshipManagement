@@ -16,13 +16,14 @@ export const UserProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get("http://localhost:8080/api/customer/user/profile", {
+      const response = await axios.get("http://localhost:8000/api/me", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
       setUser(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Error fetching user data:", error);
       setUser(null);

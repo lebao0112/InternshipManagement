@@ -142,22 +142,29 @@ export default function CourseDetailPage() {
                         <th className="p-3 text-center">Hành động</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {students.map((student) => (
-                        <tr key={student.student_id} className="border-t">
-                            <td className="p-3">{student.student_code}</td>
-                            <td className="p-3">{student.first_name + " " + student.last_name}</td>
-                            <td className="p-3">{student.email}</td>
-                            <td className={`p-3 ${student.status === 'pending' ? 'text-yellow-600' : student.status === 'approved' ? 'text-green-600' : 'text-red-600'}`}><strong>{student.status}</strong></td>
-                            <td className="p-3 flex justify-center gap-3">
-                                <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => navigate(`/lecturer/internships/${student.internship_detail_id}`)}>
-                                    <FaEye />
-                                </button>    
-                            </td>               
+                {
+                    students && students.length > 0 ? (
+                        <tbody>
+                            {students.map((student) => (
+                                <tr key={student.student_id} className="border-t">
+                                    <td className="p-3">{student.student_code}</td>
+                                    <td className="p-3">{student.first_name + " " + student.last_name}</td>
+                                    <td className="p-3">{student.email}</td>
+                                    <td className={`p-3 ${student.status === 'pending' ? 'text-yellow-600' : student.status === 'approved' ? 'text-green-600' : 'text-red-600'}`}><strong>{student.status}</strong></td>
+                                    <td className="p-3 flex justify-center gap-3">
+                                        <button className="text-blue-600 hover:text-blue-800 cursor-pointer" onClick={() => navigate(`/lecturer/internships/${student.internship_detail_id}`)}>
+                                            <FaEye />
+                                        </button>
+                                    </td>
 
-                        </tr>
-                    ))}
-                </tbody>
+                                </tr>
+                            ))}
+                        </tbody>
+                    ):(
+                            <td colSpan="5" className="p-3 text-center">Danh sách hiện đang trống</td>
+                    )
+                }
+               
             </table>
 
             {isImportModalOpen && (

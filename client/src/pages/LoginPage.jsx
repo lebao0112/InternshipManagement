@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { FiLock, FiUser } from "react-icons/fi";
-import { useState } from "react";
 
+
+import { useState } from "react";
 import axios from "axios";
 
 
@@ -56,7 +57,7 @@ export default function LoginPage() {
 
     return (
 
-        <div className="flex-grow container max-w-4/6 mx-auto px-4 py-6">
+        <div className="flex-grow container max-w-4/6 mx-auto px-4 py-6" >
             <div className="flex justify-center">
                 <div className="w-96">
                     <h1 className="text-2xl font-semibold text-center">Đăng nhập</h1>

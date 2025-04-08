@@ -61,18 +61,28 @@ class AuthService
     public function getUserDetails($user)
     {
         // Fetch user details based on the authenticated token
-        $userDetails = Capsule::table('users')->where('user_id', $user['sub'])->first();
+        $userDetails = Capsule::table('users')
+            ->where('users.user_id', $user['sub'])
+            ->when($user['role'] === 'student', function ($query) {
+                return $query->join('students', 'students.user_id', '=', 'users.user_id');
+            }, function ($query) {
+                return $query->join('lecturers', 'lecturers.user_id', '=', 'users.user_id');
+            })
+            ->first();
+
 
         if (!$userDetails) {
             return ["error" => "User not found", "status" => 404];
         }
 
         return [
+            "status"=> 200,
             "user_id" => $userDetails->user_id,
-            "username" => $userDetails->username,
             "role" => $userDetails->role,
-            "created_at" => $userDetails->created_at,
-            "status" => 200
+            "full_name" => $userDetails->first_name . " " . $userDetails->last_name,
+            "code" => $userDetails->lecturer_code ?? $userDetails->student_code, // Safe null coalescing operator
+            "phone" => $userDetails->phone,
+            "email" => $userDetails->email,
         ];
     }
 
